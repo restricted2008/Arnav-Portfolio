@@ -6,137 +6,83 @@ gsap.registerPlugin(ScrollTrigger)
 
 const achievements = [
   {
-    tag: 'Competition Winner',
-    color: 'var(--terra)',
-    year: '2025',
-    org: 'Geek Room, MSIT',
-    title: 'Build Up Ideathon 2025',
-    role: 'Winner · Best Freshers Team · Team Leader',
+    tag: 'Competition Winner', year: '2025', org: 'Geek Room, MSIT',
+    title: 'Build Up Ideathon 2025', role: 'Winner · Best Freshers Team · Team Leader',
+    chips: ['Winner', 'Best Freshers Team', 'Blockchain', 'Team Leader'],
     description: 'Pitched KrishiRaksha — a blockchain-based agricultural traceability platform for farm-to-consumer supply chain transparency. Won Best Freshers Team out of all competing teams.',
-    icon: '🏆',
+    image: '/assets/certs/ideathon.png',
   },
   {
-    tag: 'All India Finalist',
-    color: 'var(--sage-mid)',
-    year: '2026',
-    org: 'Graphic Era University, Dehradun',
-    title: 'Graph-e-thon 3.0',
-    role: 'All India Finalist · Team Leader, PowerRangers (MSI)',
-    description: 'Co-built and pitched Raksha — a women\'s emergency SOS platform targeting feature-phone users. Led the full business evaluation round with a 12-slide deck and live demo.',
-    icon: '🥇',
+    tag: 'Leadership Role', year: '2026', org: 'MSI · BCA Placement Cell',
+    title: 'Social Media Head', role: 'Instagram & LinkedIn · 774+ followers',
+    chips: ['Promoted 2026', '10K+ Avg Views', 'In-house Design'],
+    description: 'Promoted to Social Media Head — manages official Instagram and LinkedIn channels, running original post and reel series averaging 10K+ views, all designed in-house.',
+    image: '/assets/smh-batch.png', cover: true,
   },
   {
-    tag: 'Academic Research',
-    color: 'var(--amber)',
-    year: '2026',
-    org: 'Viksit Bharat Conference',
-    title: 'Co-Author & Presenter',
-    role: 'Research Presentation — National Conference',
-    description: 'Co-authored and presented "Reimagining Pedagogy in the Age of Generative AI" at Viksit Bharat Conference 2026.',
-    icon: '📄',
+    tag: 'All India Finalist', year: '2026', org: 'Graphic Era University, Dehradun',
+    title: 'Graph-e-thon 3.0', role: 'Team Leader · PowerRangers (MSI)',
+    chips: ['All India Finalist', '72hr Hackathon', 'Product Design', 'Live Pitch'],
+    description: "Co-built and pitched Raksha — a women's emergency SOS platform targeting feature-phone users. Led the full business evaluation round with a 12-slide deck and live demo to the judging panel.",
+    image: '/assets/certs/graphethon.png',
+    link: '/assets/raksha-pitch.pdf', linkLabel: 'View Pitch Deck PDF →',
   },
   {
-    tag: 'Leadership Role',
-    color: '#6B4F8A',
-    year: '2026',
-    org: 'MSI, BCA Placement Cell',
-    title: 'Social Media Head',
-    role: 'Promoted 2026 · Instagram & LinkedIn',
-    description: 'Promoted to Social Media Head — manages official Instagram and LinkedIn channels with 774+ followers and 10K+ average views per post.',
-    icon: '📱',
+    tag: 'Academic Research', year: '2026', org: 'Viksit Bharat Conference',
+    title: 'Co-Author & Presenter', role: 'National Conference · Research Paper',
+    chips: ['Co-Author', 'Presenter', 'Generative AI'],
+    description: 'Co-authored and presented "Reimagining Pedagogy in the Age of Generative AI" at Viksit Bharat Conference 2026 — a national academic research presentation.',
+    image: '/assets/certs/national-conference.png',
   },
   {
-    tag: 'Event Organisation',
-    color: 'var(--sage)',
-    year: '2026',
-    org: 'Maharaja Surajmal Group of Institutions',
-    title: 'Chief Organiser — Genesis 2K26',
-    role: 'Annual Cultural Fest — MSI',
-    description: 'Chief Organiser for Genesis 2K26, the annual cultural fest held on 11 & 12 February 2026 at Maharaja Surajmal Group of Institutions.',
-    icon: '🎭',
+    tag: 'Event Organisation', year: '2026', org: 'Maharaja Surajmal Institute',
+    title: 'Chief Organiser — Genesis 2K26', role: 'Annual Socio-Cultural Fest',
+    chips: ['Chief Organiser', 'Cultural Fest', 'Team Lead'],
+    description: 'Chief Organiser for Genesis 2K26 — the annual socio-cultural fest held 11–12 February 2026 at Maharaja Surajmal Group of Institutions.',
+    image: '/assets/certs/genesis.png',
   },
 ]
 
-function AchievementCard({ item, index }) {
+function Box({ item }) {
   const ref = useRef(null)
-
   useEffect(() => {
-    gsap.fromTo(ref.current,
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1, y: 0, duration: 0.7, delay: (index % 3) * 0.1, ease: 'power3.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 88%' },
-      }
-    )
-  }, [index])
+    gsap.fromTo(ref.current, { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: ref.current, start: 'top 88%' } })
+  }, [])
 
   return (
-    <div ref={ref} style={{ opacity: 0 }}>
-      <div style={{
-        background: 'var(--cream)',
-        border: '1px solid var(--border)',
-        borderRadius: '8px',
-        padding: '28px',
-        height: '100%',
-        position: 'relative', overflow: 'hidden',
-        transition: 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s',
-      }}
-        onMouseEnter={e => {
-          e.currentTarget.style.transform = 'translateY(-4px)'
-          e.currentTarget.style.boxShadow = '0 12px 40px rgba(28,17,8,0.1)'
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.transform = 'none'
-          e.currentTarget.style.boxShadow = 'none'
-        }}
-      >
-        {/* Left border accent */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, bottom: 0, width: '3px',
-          background: item.color,
-          borderRadius: '8px 0 0 8px',
-        }} />
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-          <span style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: '9px', letterSpacing: '0.18em',
-            textTransform: 'uppercase', color: item.color,
-            background: `${item.color}15`,
-            padding: '3px 10px', borderRadius: '100px',
-            border: `1px solid ${item.color}30`,
-          }}>{item.tag}</span>
-          <span style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: '10px', color: 'var(--warm-gray)',
-          }}>{item.year}</span>
+    <div ref={ref} style={{ opacity: 0, marginBottom: 'clamp(14px, 2vw, 20px)' }}>
+      <div className="neu" style={{ padding: 'clamp(20px, 3vw, 32px)' }}>
+        <div className="row g-4 gx-lg-5 align-items-center">
+          {/* content */}
+          <div className="col-12 col-lg-7">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
+              <span className="tag">{item.tag}</span>
+              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', color: 'var(--muted)' }}>{item.year}</span>
+            </div>
+            <h3 className="display" style={{ fontSize: 'clamp(24px, 3.6vw, 38px)', marginBottom: '5px', color: 'var(--text)' }}>{item.title}</h3>
+            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '14px' }}>{item.org}</p>
+            <p style={{ fontSize: '13.5px', color: 'var(--text-soft)', lineHeight: 1.65, marginBottom: '18px' }}>{item.description}</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', marginBottom: item.link ? '20px' : 0 }}>
+              {item.chips.map(c => (
+                <span key={c} style={{ fontFamily: "'Space Mono', monospace", fontSize: '9px', letterSpacing: '0.1em', padding: '5px 12px', borderRadius: '999px', color: 'var(--gold)', border: '1px solid rgba(255,200,97,0.25)', background: 'rgba(255,200,97,0.07)' }}>{c}</span>
+              ))}
+            </div>
+            {item.link && (
+              <a href={item.link} target="_blank" rel="noopener noreferrer" className="btn-neu" style={{ fontSize: '12px', padding: '11px 26px' }}>{item.linkLabel}</a>
+            )}
+          </div>
+          {/* image — capped height so the box stays compact */}
+          <div className="col-12 col-lg-5">
+            <div style={{
+              height: 'clamp(150px, 22vw, 210px)', borderRadius: '14px', overflow: 'hidden',
+              border: '1px solid var(--line)', boxShadow: '0 14px 32px rgba(0,0,0,0.4)',
+              background: 'linear-gradient(150deg, rgba(48,36,26,0.5), rgba(20,14,9,0.4))',
+            }}>
+              <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: item.cover ? 'cover' : 'contain', display: 'block' }} />
+            </div>
+          </div>
         </div>
-
-        <div style={{ fontSize: '28px', marginBottom: '10px' }}>{item.icon}</div>
-
-        <h4 style={{
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontWeight: 700, fontSize: '19px',
-          letterSpacing: '-0.01em', color: 'var(--dark)',
-          marginBottom: '4px',
-        }}>{item.title}</h4>
-
-        <p style={{
-          fontFamily: "'Space Mono', monospace",
-          fontSize: '9px', letterSpacing: '0.12em',
-          textTransform: 'uppercase', color: 'var(--warm-gray)',
-          marginBottom: '12px',
-        }}>{item.org}</p>
-
-        <p style={{ fontSize: '13px', color: 'var(--warm-gray)', lineHeight: 1.6, marginBottom: '12px' }}>
-          {item.description}
-        </p>
-
-        <p style={{
-          fontFamily: "'Space Mono', monospace",
-          fontSize: '9px', letterSpacing: '0.08em',
-          color: item.color, lineHeight: 1.4,
-        }}>{item.role}</p>
       </div>
     </div>
   )
@@ -144,44 +90,20 @@ function AchievementCard({ item, index }) {
 
 export default function Achievements() {
   const headRef = useRef(null)
-
   useEffect(() => {
-    gsap.fromTo(headRef.current,
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
-        scrollTrigger: { trigger: headRef.current, start: 'top 85%' } }
-    )
+    gsap.fromTo(headRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: headRef.current, start: 'top 88%' } })
   }, [])
 
   return (
-    <section id="achievements" style={{
-      padding: 'clamp(80px, 10vw, 120px) clamp(24px, 6vw, 80px)',
-      background: 'var(--cream-2)',
-      borderTop: '1px solid var(--border)',
-    }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        <div ref={headRef} style={{ opacity: 0, marginBottom: 'clamp(40px, 5vw, 64px)' }}>
-          <div className="section-rule" />
-          <span className="section-label">05 — Recognitions & Achievements</span>
-          <h2 style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontWeight: 700, fontSize: 'clamp(36px, 5vw, 56px)',
-            letterSpacing: '-0.04em', lineHeight: 1, color: 'var(--dark)',
-          }}>
-            Wins &amp;<br />
-            <span className="gradient-terra">Recognition</span>
+    <section id="achievements" className="section">
+      <div className="wrap">
+        <div ref={headRef} className="section-head" style={{ opacity: 0, textAlign: 'center' }}>
+          <span className="eyebrow" style={{ marginBottom: '14px' }}>05 · Recognitions & Achievements</span>
+          <h2 className="display" style={{ fontSize: 'clamp(34px, 6vw, 64px)', marginTop: '12px' }}>
+            Wins &amp; <span className="grad-warm">recognition</span>
           </h2>
         </div>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: '16px',
-        }}>
-          {achievements.map((item, i) => (
-            <AchievementCard key={item.title} item={item} index={i} />
-          ))}
-        </div>
+        {achievements.map(item => <Box key={item.title} item={item} />)}
       </div>
     </section>
   )

@@ -27,13 +27,7 @@ function ScrollProgress() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-  return (
-    <div ref={barRef} style={{
-      position: 'fixed', top: 0, left: 0, right: 0, height: '2px',
-      zIndex: 9998, transform: 'scaleX(0)', transformOrigin: 'left',
-      background: 'linear-gradient(90deg, var(--terra), var(--amber))',
-    }} />
-  )
+  return <div ref={barRef} className="scroll-progress" />
 }
 
 export default function App() {
@@ -41,47 +35,45 @@ export default function App() {
 
   useEffect(() => {
     if (!loaded) return
-
     const lenis = new Lenis({
       duration: 1.3,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     })
-
+    window.__lenis = lenis
     lenis.on('scroll', ScrollTrigger.update)
-
     const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf) }
     requestAnimationFrame(raf)
     gsap.ticker.lagSmoothing(0)
-
     return () => lenis.destroy()
   }, [loaded])
 
   return (
     <>
+      <div className="dot-field" />
       <div className="grain" />
       <CustomCursor />
       <ScrollProgress />
 
       {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
 
-      <div style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.6s ease' }}>
+      <div style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.6s ease', position: 'relative', zIndex: 1 }}>
         <Navbar />
         <main>
-          {/* 1 - Who I am */}
+          {/* 1 · Who I am */}
           <Hero />
           <Marquee />
-          {/* 2 - Education (inside About) */}
+          {/* 2 · Education + intro */}
           <About />
-          {/* 3 - Experience / Work */}
+          {/* 3 · Experience */}
           <Work />
-          {/* 4 - Skills */}
+          {/* 4 · Skills */}
           <Skills />
-          {/* 5 - Recognitions & Achievements */}
+          {/* 5 · Recognitions & Achievements */}
           <Achievements />
-          {/* 6 - Certifications */}
+          {/* 6 · Certifications */}
           <Certifications />
-          {/* Contact */}
+          {/* Contact + footer */}
           <Contact />
         </main>
       </div>

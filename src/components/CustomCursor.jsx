@@ -8,61 +8,50 @@ export default function CustomCursor() {
   useEffect(() => {
     const dot = dotRef.current
     const ring = ringRef.current
-    let mouseX = 0, mouseY = 0
-    let ringX = 0, ringY = 0
+    let mx = 0, my = 0, rx = 0, ry = 0
 
     const onMove = (e) => {
-      mouseX = e.clientX
-      mouseY = e.clientY
-      gsap.to(dot, { x: mouseX - 5, y: mouseY - 5, duration: 0.08, ease: 'power2.out' })
+      mx = e.clientX; my = e.clientY
+      gsap.to(dot, { x: mx - 4, y: my - 4, duration: 0.08, ease: 'power2.out' })
     }
-
     const tick = () => {
-      ringX += (mouseX - ringX) * 0.1
-      ringY += (mouseY - ringY) * 0.1
-      gsap.set(ring, { x: ringX - 22, y: ringY - 22 })
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12
+      gsap.set(ring, { x: rx - 20, y: ry - 20 })
       requestAnimationFrame(tick)
     }
-
     const onEnter = () => {
-      gsap.to(dot, { scale: 2.5, background: 'var(--terra)', duration: 0.25 })
-      gsap.to(ring, { scale: 1.4, borderColor: 'var(--terra)', opacity: 0.6, duration: 0.25 })
+      gsap.to(dot, { scale: 2.4, background: '#FF5A1F', duration: 0.25 })
+      gsap.to(ring, { scale: 1.5, borderColor: '#FF5A1F', opacity: 0.7, duration: 0.25 })
     }
     const onLeave = () => {
-      gsap.to(dot, { scale: 1, background: 'var(--dark)', duration: 0.25 })
-      gsap.to(ring, { scale: 1, borderColor: 'var(--dark)', opacity: 0.35, duration: 0.25 })
+      gsap.to(dot, { scale: 1, background: '#FFB22E', duration: 0.25 })
+      gsap.to(ring, { scale: 1, borderColor: 'rgba(255,178,46,0.4)', opacity: 0.5, duration: 0.25 })
     }
 
     window.addEventListener('mousemove', onMove)
     tick()
-
-    const addListeners = () => {
-      document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
-        el.addEventListener('mouseenter', onEnter)
-        el.addEventListener('mouseleave', onLeave)
-      })
-    }
-    addListeners()
-    const obs = new MutationObserver(addListeners)
+    const add = () => document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
+      el.addEventListener('mouseenter', onEnter)
+      el.addEventListener('mouseleave', onLeave)
+    })
+    add()
+    const obs = new MutationObserver(add)
     obs.observe(document.body, { childList: true, subtree: true })
-
-    return () => {
-      window.removeEventListener('mousemove', onMove)
-      obs.disconnect()
-    }
+    return () => { window.removeEventListener('mousemove', onMove); obs.disconnect() }
   }, [])
 
   return (
     <>
       <div ref={dotRef} style={{
-        position: 'fixed', top: 0, left: 0, width: 10, height: 10,
-        borderRadius: '50%', background: 'var(--dark)',
+        position: 'fixed', top: 0, left: 0, width: 8, height: 8,
+        borderRadius: '50%', background: '#FFB22E',
         pointerEvents: 'none', zIndex: 99998,
+        boxShadow: '0 0 12px rgba(255,90,31,0.6)',
       }} />
       <div ref={ringRef} style={{
-        position: 'fixed', top: 0, left: 0, width: 44, height: 44,
-        borderRadius: '50%', border: '1.5px solid rgba(28,17,8,0.35)',
-        pointerEvents: 'none', zIndex: 99997,
+        position: 'fixed', top: 0, left: 0, width: 40, height: 40,
+        borderRadius: '50%', border: '1.5px solid rgba(255,178,46,0.4)',
+        pointerEvents: 'none', zIndex: 99997, opacity: 0.5,
       }} />
     </>
   )
