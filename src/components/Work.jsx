@@ -8,13 +8,13 @@ const cases = [
     overview: 'Built the full brand system for a live B2C puja brand — labels, packaging, festive creatives & social — then ran the Amazon, Flipkart & WooCommerce store with ₹98K+ in paid ads.',
     result: [['₹12L+', 'Annual Sales'], ['3.8×', 'ROAS'], ['1,200+', 'SKUs']],
     link: { label: 'Visit murliwale.com', href: 'http://murliwale.com/' },
-    brand: { wordmark: 'Murliwale', sub: 'Puja Fragrance Brand · murliwale.com' },
+    brand: { logo: '/assets/murliwale-logo.png', logoW: 'clamp(170px,22vw,240px)', sub: 'Puja Fragrance Brand · murliwale.com' },
     accent: true,
   },
   {
     id: 'WK-002', title: 'SOCIETIES & COLLEGE', cat: 'Social Media · Posters · Society & Campus Design', year: '2025 — Now',
     overview: 'Design lead across college societies, NSS & the placement cell — event posters, fest branding, festive creatives and LinkedIn series, all shipped in-house.',
-    result: [['10K+', 'Avg Views'], ['774+', 'Followers'], ['12+', 'Campaigns']],
+    result: [['10K+', 'Avg Views'], ['100%', 'In-House'], ['12+', 'Campaigns']],
     link: null,
     brand: { logo: '/assets/bca-logo.png', sub: 'MSI · Placement Cell & Societies' },
     accent: false,
@@ -23,10 +23,10 @@ const cases = [
 
 function BrandPanel({ brand }) {
   return (
-    <div style={{ height: '100%', minHeight: 240, background: 'var(--paper-3)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, padding: 'clamp(24px,4vw,48px)', textAlign: 'center' }}>
-      <div style={{ background: '#F3EEDF', border: '2px solid var(--ink)', padding: 'clamp(20px,3vw,34px)', display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '60%' }}>
+    <div style={{ height: '100%', minHeight: 160, background: 'var(--paper-3)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: 'clamp(16px,2.4vw,28px)', textAlign: 'center' }}>
+      <div style={{ background: '#F3EEDF', border: '2px solid var(--ink)', padding: 'clamp(14px,2vw,22px)', display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '60%' }}>
         {brand.logo
-          ? <img src={brand.logo} alt="" data-zoom loading="lazy" decoding="async" style={{ width: 'clamp(120px,16vw,180px)', height: 'auto', display: 'block' }} />
+          ? <img src={brand.logo} alt="" data-zoom loading="lazy" decoding="async" style={{ width: brand.logoW || 'clamp(96px,12vw,130px)', height: 'auto', display: 'block' }} />
           : <span className="display" style={{ fontSize: 'clamp(28px,4vw,52px)', color: '#143C36', lineHeight: 0.9, fontFamily: 'var(--display)' }}>{brand.wordmark}</span>}
       </div>
       <span className="meta">{brand.sub}</span>
@@ -71,7 +71,7 @@ function Case({ c }) {
           {/* box 2: impact — grows to fill so the dividers reach the bottom */}
           <div style={{ display: 'flex', flexWrap: 'wrap', flex: 1 }}>
             {c.result.map((r, i) => (
-              <div key={r[1]} style={{ flex: '1 1 110px', padding: 'clamp(16px,2vw,26px)', borderRight: i < c.result.length - 1 ? '2px solid var(--ink)' : 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div key={r[1]} style={{ flex: '1 1 110px', padding: 'clamp(14px,1.8vw,20px)', borderRight: i < c.result.length - 1 ? '2px solid var(--ink)' : 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div className="display" style={{ fontSize: 'clamp(30px,4vw,56px)', color: 'var(--ink)', lineHeight: 0.85 }}>{r[0]}</div>
                 <div className="meta" style={{ marginTop: 8 }}>{r[1]}</div>
               </div>
