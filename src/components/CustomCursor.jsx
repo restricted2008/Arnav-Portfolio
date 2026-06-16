@@ -6,53 +6,27 @@ export default function CustomCursor() {
   const ringRef = useRef(null)
 
   useEffect(() => {
-    const dot = dotRef.current
-    const ring = ringRef.current
-    let mx = 0, my = 0, rx = 0, ry = 0
-
+    const dot = dotRef.current, ring = ringRef.current
+    let mx = 0, my = 0, rx = 0, ry = 0, hovering = false, raf = 0
+    const onEnter = () => { gsap.to(ring, { scale: 1.8, backgroundColor: 'rgba(215,169,46,0.25)', duration: 0.2 }) }
+    const onLeave = () => { gsap.to(ring, { scale: 1, backgroundColor: 'rgba(215,169,46,0)', duration: 0.2 }) }
+    // One delegated handler — no per-element listeners, no MutationObserver.
     const onMove = (e) => {
       mx = e.clientX; my = e.clientY
-      gsap.to(dot, { x: mx - 4, y: my - 4, duration: 0.08, ease: 'power2.out' })
+      gsap.to(dot, { x: mx, y: my, duration: 0.06 })
+      const over = !!e.target.closest?.('a, button, [data-cursor]')
+      if (over !== hovering) { hovering = over; over ? onEnter() : onLeave() }
     }
-    const tick = () => {
-      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12
-      gsap.set(ring, { x: rx - 20, y: ry - 20 })
-      requestAnimationFrame(tick)
-    }
-    const onEnter = () => {
-      gsap.to(dot, { scale: 2.4, background: '#FF5A1F', duration: 0.25 })
-      gsap.to(ring, { scale: 1.5, borderColor: '#FF5A1F', opacity: 0.7, duration: 0.25 })
-    }
-    const onLeave = () => {
-      gsap.to(dot, { scale: 1, background: '#FFB22E', duration: 0.25 })
-      gsap.to(ring, { scale: 1, borderColor: 'rgba(255,178,46,0.4)', opacity: 0.5, duration: 0.25 })
-    }
-
+    const tick = () => { rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16; gsap.set(ring, { x: rx, y: ry }); raf = requestAnimationFrame(tick) }
     window.addEventListener('mousemove', onMove)
     tick()
-    const add = () => document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
-      el.addEventListener('mouseenter', onEnter)
-      el.addEventListener('mouseleave', onLeave)
-    })
-    add()
-    const obs = new MutationObserver(add)
-    obs.observe(document.body, { childList: true, subtree: true })
-    return () => { window.removeEventListener('mousemove', onMove); obs.disconnect() }
+    return () => { window.removeEventListener('mousemove', onMove); cancelAnimationFrame(raf) }
   }, [])
 
   return (
     <>
-      <div ref={dotRef} style={{
-        position: 'fixed', top: 0, left: 0, width: 8, height: 8,
-        borderRadius: '50%', background: '#FFB22E',
-        pointerEvents: 'none', zIndex: 99998,
-        boxShadow: '0 0 12px rgba(255,90,31,0.6)',
-      }} />
-      <div ref={ringRef} style={{
-        position: 'fixed', top: 0, left: 0, width: 40, height: 40,
-        borderRadius: '50%', border: '1.5px solid rgba(255,178,46,0.4)',
-        pointerEvents: 'none', zIndex: 99997, opacity: 0.5,
-      }} />
+      <div ref={dotRef} className="cursor-el" style={{ position: 'fixed', top: 0, left: 0, width: 7, height: 7, background: '#17160F', pointerEvents: 'none', zIndex: 99998, transform: 'translate(-50%,-50%)' }} />
+      <div ref={ringRef} className="cursor-el" style={{ position: 'fixed', top: 0, left: 0, width: 30, height: 30, border: '1.5px solid #17160F', pointerEvents: 'none', zIndex: 99997, transform: 'translate(-50%,-50%)' }} />
     </>
   )
 }

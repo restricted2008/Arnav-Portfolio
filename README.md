@@ -1,16 +1,41 @@
-# React + Vite
+# Arnav Sharma — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Single-page portfolio for Arnav Sharma (graphic designer & performance marketer).
+Editorial "print-magazine" design with scroll-triggered motion.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19** + **Vite** — app & build
+- **GSAP / ScrollTrigger** — entrance + scroll animations
+- **Lenis** — smooth scrolling (disabled when the OS requests reduced motion)
+- **Tailwind 4** + hand-written design tokens in `src/index.css`
+- **Bootstrap grid** (grid CSS only) — section layouts
 
-## React Compiler
+## Develop
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev      # local dev server
+npm run lint     # ESLint
+npm run build    # production build → dist/
+npm run preview  # preview the production build
+```
 
-## Expanding the ESLint configuration
+## Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+src/
+├── App.jsx             # smooth scroll, loader gate, section order
+├── index.css           # design tokens, typography, components, a11y
+├── lib/motion.js       # prefers-reduced-motion helper
+└── components/         # one file per section (Hero, About, Work, …)
+public/assets/          # images, certs, design thumbnails
+```
+
+## Deploy
+
+Auto-deploys to Netlify (`netlify.toml`): build `npm run build`, publish `dist/`.
+SPA redirect to `/index.html` is configured.
+
+> Before sharing the live link, set an absolute `og:image` URL (and `og:url`)
+> in `index.html` so social previews render a real card.

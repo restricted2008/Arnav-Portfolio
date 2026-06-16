@@ -1,101 +1,69 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
+import { usePrefersReducedMotion } from '../lib/motion'
 
 const certs = [
-  { title: 'Amazon ATES Training', issuer: 'Amazon India', year: '2024', image: '/assets/certs/amazon-ates.jpg', tag: 'E-Commerce' },
-  { title: 'Advanced Graphic Designing', issuer: 'iElevate', year: '2024', image: '/assets/certs/advanced-design.jpg', tag: 'Design' },
-  { title: 'Digital Marketing Fundamentals', issuer: 'iElevate', year: '2024', image: '/assets/certs/digital-marketing.jpg', tag: 'Marketing' },
-  { title: 'Graph-e-thon 3.0', issuer: 'Graphic Era University', year: '2026', image: '/assets/certs/graphethon.png', tag: 'Hackathon' },
-  { title: 'Build Up Ideathon 2025', issuer: 'Geek Room, MSIT', year: '2025', image: '/assets/certs/ideathon.png', tag: 'Competition' },
-  { title: 'Viksit Bharat Conference', issuer: 'National Conference', year: '2026', image: '/assets/certs/national-conference.png', tag: 'Research' },
+  { title: 'Amazon ATES Training', issuer: 'Amazon India', year: '2024', img: '/assets/certs/amazon-ates.jpg', tag: 'E-Commerce' },
+  { title: 'Advanced Graphic Designing', issuer: 'iElevate', year: '2024', img: '/assets/certs/advanced-design.jpg', tag: 'Design' },
+  { title: 'Digital Marketing Fundamentals', issuer: 'iElevate', year: '2024', img: '/assets/certs/digital-marketing.jpg', tag: 'Marketing' },
+  { title: 'Build Up Ideathon 2025', issuer: 'Geek Room, MSIT', year: '2025', img: '/assets/certs/ideathon.png', tag: 'Competition' },
+  { title: 'Graph-e-thon 3.0', issuer: 'Graphic Era University', year: '2026', img: '/assets/certs/graphethon.png', tag: 'Hackathon' },
+  { title: 'Viksit Bharat Conference', issuer: 'National Conference', year: '2026', img: '/assets/certs/national-conference.png', tag: 'Research' },
+  { title: 'Genesis 2K26 — Organiser', issuer: 'Maharaja Surajmal Institute', year: '2026', img: '/assets/certs/genesis.png', tag: 'Organiser' },
 ]
 
-function Modal({ cert, onClose }) {
-  const ref = useRef(null)
-  useEffect(() => {
-    gsap.fromTo(ref.current, { opacity: 0 }, { opacity: 1, duration: 0.3 })
-    const onKey = (e) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = '' }
-  }, [onClose])
-  const close = () => gsap.to(ref.current, { opacity: 0, duration: 0.2, onComplete: onClose })
-
-  return (
-    <div ref={ref} onClick={close} style={{
-      position: 'fixed', inset: 0, zIndex: 10000, opacity: 0, cursor: 'none',
-      background: 'rgba(20,14,9,0.92)', backdropFilter: 'blur(10px)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px',
-    }}>
-      <div onClick={e => e.stopPropagation()} style={{ position: 'relative', maxWidth: '760px', width: '100%' }}>
-        <button onClick={close} className="btn-ghost" style={{ position: 'absolute', top: '-46px', right: 0, fontSize: '12px', padding: '8px 18px' }}>✕ Close</button>
-        <div className="neu" style={{ padding: '12px' }}>
-          <img src={cert.image} alt={cert.title} style={{ width: '100%', display: 'block', borderRadius: '14px' }} />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px', padding: '0 6px' }}>
-          <div>
-            <div className="display-2" style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: '16px', color: 'var(--text)' }}>{cert.title}</div>
-            <div style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.1em', marginTop: '3px' }}>{cert.issuer} · {cert.year}</div>
-          </div>
-          <span className="tag">{cert.tag}</span>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function Certifications() {
-  const headRef = useRef(null)
-  const stripRef = useRef(null)
-  const [active, setActive] = useState(null)
-
+  const ref = useRef(null)
+  const [zoom, setZoom] = useState(null)
+  const reduced = usePrefersReducedMotion()
   useEffect(() => {
-    gsap.fromTo(headRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: headRef.current, start: 'top 88%' } })
-    gsap.fromTo(stripRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: stripRef.current, start: 'top 90%' } })
+    if (reduced) return
+    const ctx = gsap.context(() => {
+      gsap.from('[data-c]', { opacity: 0, y: 24, duration: 0.55, stagger: 0.08, scrollTrigger: { trigger: ref.current, start: 'top 80%' } })
+    }, ref)
+    return () => ctx.revert()
+  }, [reduced])
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setZoom(null) }
+    window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   return (
-    <>
-      <section id="certifications" className="section">
-        <div className="wrap">
-          <div ref={headRef} className="section-head" style={{ opacity: 0, textAlign: 'center' }}>
-            <span className="eyebrow" style={{ marginBottom: '14px' }}>06 · Certifications</span>
-            <h2 className="display" style={{ fontSize: 'clamp(34px, 6vw, 64px)', marginTop: '12px' }}>
-              Credentials &amp; <span className="grad-warm">proof of work</span>
-            </h2>
-            <p style={{ marginTop: '12px', fontFamily: "'Space Mono', monospace", fontSize: '10px', letterSpacing: '0.12em', color: 'var(--muted)' }}>Click any certificate to view full size</p>
-          </div>
-
-          <div ref={stripRef} style={{ opacity: 0 }}>
-            <div className="h-scroll">
-              {certs.map(cert => (
-                <div key={cert.title} onClick={() => setActive(cert)} className="neu neu-hover" style={{ flexShrink: 0, width: '280px', padding: '10px', cursor: 'none' }}>
-                  <div style={{ height: '165px', overflow: 'hidden', borderRadius: '12px', position: 'relative' }}>
-                    <img src={cert.image} alt={cert.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s' }}
-                      onMouseEnter={e => e.target.style.transform = 'scale(1.06)'} onMouseLeave={e => e.target.style.transform = 'scale(1)'} />
-                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(20,14,9,0.5)', opacity: 0, transition: 'opacity 0.3s' }}
-                      onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0'}>
-                      <span className="btn-view">View Certificate</span>
-                    </div>
-                  </div>
-                  <div style={{ padding: '14px 8px 8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '7px' }}>
-                      <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '8px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--orange)' }}>{cert.tag}</span>
-                      <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '9px', color: 'var(--muted)' }}>{cert.year}</span>
-                    </div>
-                    <h4 className="display-2" style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: '15px', color: 'var(--text)', marginBottom: '3px', lineHeight: 1.25 }}>{cert.title}</h4>
-                    <p style={{ fontSize: '12px', color: 'var(--text-soft)' }}>{cert.issuer}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+    <section id="certifications" ref={ref} className="section">
+      <div className="wrap">
+        <div data-c style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+          <span className="meta">06 / Credentials</span>
+          <span className="meta">Formal Training</span>
         </div>
-      </section>
-      {active && <Modal cert={active} onClose={() => setActive(null)} />}
-    </>
+        <h2 data-c className="display dot h-lg" style={{ color: 'var(--ink)', margin: '8px 0 20px' }}>CERTS</h2>
+        <div className="rule-thick" style={{ marginBottom: 'clamp(24px,3vw,40px)' }} />
+
+        <div className="row g-0" style={{ borderTop: '2px solid var(--ink)', borderLeft: '2px solid var(--ink)' }}>
+          {certs.map((c) => (
+            <div data-c key={c.title} className="col-12 col-lg-4 cert-cell">
+              <button onClick={() => setZoom(c)} className="photo" style={{ width: '100%', border: 'none', borderBottom: '2px solid var(--ink)', aspectRatio: '1.5', cursor: 'none' }}>
+                <img src={c.img} alt={c.title} loading="lazy" decoding="async" />
+                <span className="jg-zoom" style={{ opacity: 1, top: 10, right: 10 }}>⤢</span>
+              </button>
+              <div style={{ padding: 'clamp(14px,1.8vw,22px)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                  <span className="meta accent" style={{ color: 'var(--accent-2)' }}>{c.tag}</span>
+                  <span className="meta">{c.year}</span>
+                </div>
+                <div className="display" style={{ fontSize: 'clamp(18px,2.2vw,26px)', color: 'var(--ink)', lineHeight: 0.95 }}>{c.title}</div>
+                <div className="small" style={{ marginTop: 4 }}>{c.issuer}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {zoom && (
+        <div role="dialog" aria-modal="true" aria-label={zoom.title} onClick={() => setZoom(null)} style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(23,22,15,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(20px,5vw,64px)', cursor: 'none' }}>
+          <button onClick={() => setZoom(null)} className="btn btn-accent" style={{ position: 'absolute', top: 20, left: 20 }}>← Back</button>
+          <img onClick={(e) => e.stopPropagation()} src={zoom.img} alt={zoom.title} style={{ maxWidth: '100%', maxHeight: '84vh', objectFit: 'contain', border: '3px solid var(--paper)' }} />
+        </div>
+      )}
+    </section>
   )
 }

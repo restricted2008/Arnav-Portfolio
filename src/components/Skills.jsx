@@ -1,67 +1,87 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { usePrefersReducedMotion } from '../lib/motion'
 
-gsap.registerPlugin(ScrollTrigger)
-
-const groups = [
-  { label: 'Design & Creative', accent: 'var(--orange)', skills: ['Adobe Photoshop', 'Adobe Illustrator', 'Canva', 'Packaging Design', 'Brand Identity', 'Ad Creatives', 'Social Media Visuals'] },
-  { label: 'Performance Marketing', accent: 'var(--amber)', skills: ['Meta Ads Manager', 'Google Ads', 'Amazon Advertising', 'Campaign Optimization', 'ROAS & Budgeting', 'Audience Targeting', 'A/B Testing'] },
-  { label: 'Digital & Social', accent: 'var(--gold)', skills: ['Social Media Marketing', 'Search Engine Optimization (SEO)', 'Content Strategy', 'Instagram & LinkedIn', 'Reel Production', 'Community Engagement'] },
-  { label: 'E-Commerce', accent: 'var(--coral)', skills: ['Amazon Seller Central', 'Flipkart Seller Hub', 'WooCommerce', 'Listing Optimization', 'Marketplace SEO', 'Catalogue Management'] },
+const big = [
+  { pct: 92, label: 'Graphic Design', fill: 'accent' },
+  { pct: 88, label: 'E-Commerce Ops', fill: 'ink' },
+  { pct: 85, label: 'Performance Marketing', fill: 'paper' },
+  { pct: 80, label: 'Content & Social', fill: 'accent' },
+]
+const cols = [
+  ['Design', ['Adobe Photoshop', 'Adobe Illustrator', 'Canva', 'Packaging Design', 'Brand Identity', 'Ad Creatives']],
+  ['Marketing', ['Meta Ads Manager', 'Google Ads', 'Amazon Advertising', 'Campaign Optimization', 'ROAS & Budgeting', 'A/B Testing']],
+  ['E-Commerce', ['Amazon Seller Central', 'Flipkart Seller Hub', 'WooCommerce', 'Listing Optimization', 'Marketplace SEO', 'Catalogue Mgmt']],
+  ['Social & SEO', ['Social Media Marketing', 'Search Engine Optimization', 'Content Strategy', 'Reel Production', 'Community Engagement', 'Analytics']],
 ]
 
-function Group({ group, index }) {
+function Big({ b }) {
   const ref = useRef(null)
+  const numRef = useRef(null)
+  const reduced = usePrefersReducedMotion()
   useEffect(() => {
-    gsap.fromTo(ref.current, { opacity: 0, y: 32 },
-      { opacity: 1, y: 0, duration: 0.7, delay: index * 0.1, ease: 'power3.out', scrollTrigger: { trigger: ref.current, start: 'top 90%' } })
-  }, [index])
+    if (reduced) { if (numRef.current) numRef.current.textContent = b.pct; return }
+    const ctx = gsap.context(() => {
+      const o = { v: 0 }
+      gsap.to(o, { v: b.pct, duration: 1.3, ease: 'power2.out', scrollTrigger: { trigger: ref.current, start: 'top 85%' }, onUpdate: () => { if (numRef.current) numRef.current.textContent = Math.round(o.v) } })
+    }, ref)
+    return () => ctx.revert()
+  }, [b, reduced])
+  const bg = b.fill === 'accent' ? 'var(--accent)' : b.fill === 'ink' ? 'var(--ink)' : 'var(--paper)'
+  const fg = b.fill === 'paper' ? 'var(--ink)' : 'var(--on-accent)'
   return (
-    <div ref={ref} className="col-12 col-md-6" style={{ opacity: 0 }}>
-      <div className="neu neu-hover" style={{ padding: '26px', height: '100%' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
-          <span style={{ width: 18, height: 3, borderRadius: '2px', background: group.accent, display: 'inline-block' }} />
-          <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '11px', color: 'var(--muted)' }}>0{index + 1}</span>
-          <h3 className="display-2" style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: '18px', color: 'var(--text)' }}>{group.label}</h3>
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-          {group.skills.map(s => <span key={s} className="chip">{s}</span>)}
-        </div>
-      </div>
+    <div ref={ref} className="col-6 col-lg-3 q4v" style={{ borderBottom: '2px solid var(--ink)', background: bg, padding: 'clamp(16px,2.4vw,30px)' }}>
+      <div className="display" style={{ fontSize: 'clamp(48px,8vw,110px)', color: fg, lineHeight: 0.85 }}><span ref={numRef}>0</span><span style={{ fontSize: '0.4em', verticalAlign: 'super' }}>%</span></div>
+      <div className="meta" style={{ color: fg, marginTop: 8 }}>{b.label}</div>
     </div>
   )
 }
 
 export default function Skills() {
-  const headRef = useRef(null)
-  const langRef = useRef(null)
+  const ref = useRef(null)
+  const reduced = usePrefersReducedMotion()
   useEffect(() => {
-    gsap.fromTo(headRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: headRef.current, start: 'top 88%' } })
-    gsap.fromTo(langRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', scrollTrigger: { trigger: langRef.current, start: 'top 92%' } })
-  }, [])
-
+    if (reduced) return
+    const ctx = gsap.context(() => {
+      gsap.from('[data-s]', { opacity: 0, y: 24, duration: 0.6, stagger: 0.07, scrollTrigger: { trigger: ref.current, start: 'top 80%' } })
+    }, ref)
+    return () => ctx.revert()
+  }, [reduced])
   return (
-    <section id="skills" className="section">
+    <section id="skills" ref={ref} className="section">
       <div className="wrap">
-        <div ref={headRef} className="section-head" style={{ opacity: 0, textAlign: 'center' }}>
-          <span className="eyebrow" style={{ marginBottom: '14px' }}>04 · Skills</span>
-          <h2 className="display" style={{ fontSize: 'clamp(34px, 6vw, 64px)', marginTop: '12px' }}>
-            The toolkit <span className="grad-warm">behind the work</span>
-          </h2>
+        <div data-s style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+          <span className="meta">04 / Skills</span>
+          <span className="meta">Technical Proficiency</span>
+        </div>
+        <h2 data-s className="display dot h-lg" style={{ color: 'var(--ink)', margin: '8px 0 20px' }}>SKILLS</h2>
+        <div className="rule-thick" style={{ marginBottom: 'clamp(24px,3vw,40px)' }} />
+
+        {/* big % */}
+        <div className="row g-0" style={{ borderLeft: '2px solid var(--ink)', borderRight: '2px solid var(--ink)', borderTop: '2px solid var(--ink)' }}>
+          {big.map((b) => <Big key={b.label} b={b} />)}
         </div>
 
-        <div className="row g-3">
-          {groups.map((g, i) => <Group key={g.label} group={g} index={i} />)}
-        </div>
-
-        <div ref={langRef} className="neu-sm" style={{ opacity: 0, padding: '18px 26px', marginTop: '16px', display: 'flex', alignItems: 'center', gap: '22px', flexWrap: 'wrap' }}>
-          <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--muted)' }}>Languages</span>
-          {['English', 'Hindi'].map(l => (
-            <span key={l} className="display-2" style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: '17px', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: 12, height: 2, borderRadius: '2px', background: 'var(--orange)', display: 'inline-block' }} />{l}
-            </span>
+        {/* lists */}
+        <div className="row g-0" style={{ borderLeft: '2px solid var(--ink)', borderRight: '2px solid var(--ink)', borderBottom: '2px solid var(--ink)' }}>
+          {cols.map(([head, list]) => (
+            <div data-s key={head} className="col-6 col-lg-3 q4" style={{ padding: 'clamp(16px,2vw,24px)' }}>
+              <div className="label-box" style={{ marginBottom: 14 }}>{head}</div>
+              <ul style={{ listStyle: 'none' }}>
+                {list.map((s, i) => (
+                  <li key={s} style={{ display: 'flex', gap: 8, padding: '7px 0', borderBottom: i < list.length - 1 ? '1px solid var(--line)' : 'none' }}>
+                    <span className="meta" style={{ flexShrink: 0 }}>{String(i + 1).padStart(2, '0')}</span>
+                    <span style={{ fontSize: 13, color: 'var(--ink)', lineHeight: 1.3 }}>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
+        </div>
+
+        <div data-s style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginTop: 14 }}>
+          <span className="meta">Languages — English · Hindi</span>
+          <span className="meta">Always adding tools — currently deepening motion &amp; analytics</span>
         </div>
       </div>
     </section>

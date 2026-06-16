@@ -1,110 +1,109 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { usePrefersReducedMotion } from '../lib/motion'
 
-gsap.registerPlugin(ScrollTrigger)
-
-const achievements = [
-  {
-    tag: 'Competition Winner', year: '2025', org: 'Geek Room, MSIT',
-    title: 'Build Up Ideathon 2025', role: 'Winner · Best Freshers Team · Team Leader',
-    chips: ['Winner', 'Best Freshers Team', 'Blockchain', 'Team Leader'],
-    description: 'Pitched KrishiRaksha — a blockchain-based agricultural traceability platform for farm-to-consumer supply chain transparency. Won Best Freshers Team out of all competing teams.',
-    image: '/assets/certs/ideathon.png',
-  },
-  {
-    tag: 'Leadership Role', year: '2026', org: 'MSI · BCA Placement Cell',
-    title: 'Social Media Head', role: 'Instagram & LinkedIn · 774+ followers',
-    chips: ['Promoted 2026', '10K+ Avg Views', 'In-house Design'],
-    description: 'Promoted to Social Media Head — manages official Instagram and LinkedIn channels, running original post and reel series averaging 10K+ views, all designed in-house.',
-    image: '/assets/smh-batch.png', cover: true,
-  },
-  {
-    tag: 'All India Finalist', year: '2026', org: 'Graphic Era University, Dehradun',
-    title: 'Graph-e-thon 3.0', role: 'Team Leader · PowerRangers (MSI)',
-    chips: ['All India Finalist', '72hr Hackathon', 'Product Design', 'Live Pitch'],
-    description: "Co-built and pitched Raksha — a women's emergency SOS platform targeting feature-phone users. Led the full business evaluation round with a 12-slide deck and live demo to the judging panel.",
-    image: '/assets/certs/graphethon.png',
-    link: '/assets/raksha-pitch.pdf', linkLabel: 'View Pitch Deck PDF →',
-  },
-  {
-    tag: 'Academic Research', year: '2026', org: 'Viksit Bharat Conference',
-    title: 'Co-Author & Presenter', role: 'National Conference · Research Paper',
-    chips: ['Co-Author', 'Presenter', 'Generative AI'],
-    description: 'Co-authored and presented "Reimagining Pedagogy in the Age of Generative AI" at Viksit Bharat Conference 2026 — a national academic research presentation.',
-    image: '/assets/certs/national-conference.png',
-  },
-  {
-    tag: 'Event Organisation', year: '2026', org: 'Maharaja Surajmal Institute',
-    title: 'Chief Organiser — Genesis 2K26', role: 'Annual Socio-Cultural Fest',
-    chips: ['Chief Organiser', 'Cultural Fest', 'Team Lead'],
-    description: 'Chief Organiser for Genesis 2K26 — the annual socio-cultural fest held 11–12 February 2026 at Maharaja Surajmal Group of Institutions.',
-    image: '/assets/certs/genesis.png',
-  },
-]
-
-function Box({ item }) {
-  const ref = useRef(null)
-  useEffect(() => {
-    gsap.fromTo(ref.current, { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: ref.current, start: 'top 88%' } })
-  }, [])
-
-  return (
-    <div ref={ref} style={{ opacity: 0, marginBottom: 'clamp(14px, 2vw, 20px)' }}>
-      <div className="neu" style={{ padding: 'clamp(20px, 3vw, 32px)' }}>
-        <div className="row g-4 gx-lg-5 align-items-center">
-          {/* content */}
-          <div className="col-12 col-lg-7">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
-              <span className="tag">{item.tag}</span>
-              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', color: 'var(--muted)' }}>{item.year}</span>
-            </div>
-            <h3 className="display" style={{ fontSize: 'clamp(24px, 3.6vw, 38px)', marginBottom: '5px', color: 'var(--text)' }}>{item.title}</h3>
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '14px' }}>{item.org}</p>
-            <p style={{ fontSize: '13.5px', color: 'var(--text-soft)', lineHeight: 1.65, marginBottom: '18px' }}>{item.description}</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', marginBottom: item.link ? '20px' : 0 }}>
-              {item.chips.map(c => (
-                <span key={c} style={{ fontFamily: "'Space Mono', monospace", fontSize: '9px', letterSpacing: '0.1em', padding: '5px 12px', borderRadius: '999px', color: 'var(--gold)', border: '1px solid rgba(255,200,97,0.25)', background: 'rgba(255,200,97,0.07)' }}>{c}</span>
-              ))}
-            </div>
-            {item.link && (
-              <a href={item.link} target="_blank" rel="noopener noreferrer" className="btn-neu" style={{ fontSize: '12px', padding: '11px 26px' }}>{item.linkLabel}</a>
-            )}
-          </div>
-          {/* image — capped height so the box stays compact */}
-          <div className="col-12 col-lg-5">
-            <div style={{
-              height: 'clamp(150px, 22vw, 210px)', borderRadius: '14px', overflow: 'hidden',
-              border: '1px solid var(--line)', boxShadow: '0 14px 32px rgba(0,0,0,0.4)',
-              background: 'linear-gradient(150deg, rgba(48,36,26,0.5), rgba(20,14,9,0.4))',
-            }}>
-              <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: item.cover ? 'cover' : 'contain', display: 'block' }} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+const featured = {
+  title: 'Social Media Head', org: 'BCA Placement Cell · MSI', year: '2026',
+  role: 'Instagram & LinkedIn',
+  blurb: 'Took a social channel from scratch to a repeatable content engine — concepting, designing, writing and shipping every post & reel solo. The series average 10K+ views and grew the audience past 774 followers in months.',
+  stats: [['10K+', 'Avg Views'], ['774+', 'Followers'], ['12+', 'Campaigns']],
+  img: '/assets/smh-batch.png',
 }
 
+const wins = [
+  { n: '01', title: 'Build Up Ideathon 2025', role: 'Winner · Best Freshers Team · Team Leader', org: 'Geek Room, MSIT', year: '2025', img: '/assets/certs/ideathon.png', tag: 'Winner' },
+  { n: '02', title: 'Graph-e-thon 3.0', role: 'All India Finalist · Team Leader, PowerRangers', org: 'Graphic Era University', year: '2026', img: '/assets/certs/graphethon.png', tag: 'Finalist' },
+  { n: '03', title: 'Viksit Bharat Conference', role: 'Co-Author & Presenter — “Pedagogy in the Age of GenAI”', org: 'National Conference', year: '2026', img: '/assets/certs/national-conference.png', tag: 'Research' },
+  { n: '04', title: 'Genesis 2K26', role: 'Chief Organiser — Annual Socio-Cultural Fest', org: 'Maharaja Surajmal Institute', year: '2026', img: '/assets/certs/genesis.png', tag: 'Organiser' },
+]
+
 export default function Achievements() {
-  const headRef = useRef(null)
+  const ref = useRef(null)
+  const [zoom, setZoom] = useState(null)
+  const reduced = usePrefersReducedMotion()
   useEffect(() => {
-    gsap.fromTo(headRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: headRef.current, start: 'top 88%' } })
+    if (reduced) return
+    const ctx = gsap.context(() => {
+      gsap.from('[data-win]', { opacity: 0, x: -24, duration: 0.55, stagger: 0.07, scrollTrigger: { trigger: ref.current, start: 'top 78%' } })
+    }, ref)
+    return () => ctx.revert()
+  }, [reduced])
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setZoom(null) }
+    window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   return (
-    <section id="achievements" className="section">
+    <section id="achievements" ref={ref} className="section" style={{ background: 'var(--ink)' }}>
       <div className="wrap">
-        <div ref={headRef} className="section-head" style={{ opacity: 0, textAlign: 'center' }}>
-          <span className="eyebrow" style={{ marginBottom: '14px' }}>05 · Recognitions & Achievements</span>
-          <h2 className="display" style={{ fontSize: 'clamp(34px, 6vw, 64px)', marginTop: '12px' }}>
-            Wins &amp; <span className="grad-warm">recognition</span>
-          </h2>
+        <div data-win style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+          <span className="meta" style={{ color: 'var(--grey-2)' }}>05 / Recognition</span>
+          <span className="meta" style={{ color: 'var(--accent)' }}>Verified · Click to view</span>
         </div>
-        {achievements.map(item => <Box key={item.title} item={item} />)}
+        <h2 data-win className="display h-lg" style={{ color: 'var(--paper)', margin: '8px 0 20px' }}><span style={{ color: 'var(--accent)' }}>.</span>WINS</h2>
+        <div style={{ height: 5, background: 'var(--accent)', marginBottom: 'clamp(24px,3vw,40px)' }} />
+
+        {/* featured — Social Media Head */}
+        <div data-win style={{ border: '2px solid var(--paper)', marginBottom: 20, background: 'var(--accent)' }}>
+          <div className="row g-0">
+            <div className="col-12 col-lg-5 split-divider">
+              <button onClick={() => setZoom(featured)} className="photo" style={{ width: '100%', height: '100%', minHeight: 240, border: 'none', cursor: 'none', background: 'var(--ink)' }}>
+                <img src={featured.img} alt={featured.title} style={{ objectFit: 'cover' }} loading="lazy" decoding="async" />
+              </button>
+            </div>
+            <div className="col-12 col-lg-7" style={{ padding: 'clamp(20px,3vw,40px)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                <span className="label-box">Centre Stage</span>
+                <span className="meta" style={{ color: 'var(--on-accent)' }}>{featured.year}</span>
+              </div>
+              <h3 className="display" style={{ fontSize: 'clamp(30px,5vw,64px)', color: 'var(--on-accent)', lineHeight: 0.9, margin: '14px 0 6px' }}>{featured.title}</h3>
+              <span className="meta" style={{ color: 'var(--on-accent)' }}>{featured.org} · {featured.role}</span>
+              <p style={{ fontFamily: 'var(--body)', fontSize: 15, lineHeight: 1.6, color: 'var(--on-accent)', margin: '14px 0 18px', maxWidth: '54ch' }}>{featured.blurb}</p>
+              <div style={{ display: 'flex', gap: 0, border: '2px solid var(--ink)', flexWrap: 'wrap' }}>
+                {featured.stats.map((s, i) => (
+                  <div key={s[1]} style={{ flex: '1 1 90px', padding: '14px 16px', borderRight: i < featured.stats.length - 1 ? '2px solid var(--ink)' : 'none' }}>
+                    <div className="display" style={{ fontSize: 'clamp(24px,3vw,40px)', color: 'var(--on-accent)', lineHeight: 0.9 }}>{s[0]}</div>
+                    <div className="meta" style={{ color: 'var(--on-accent)', marginTop: 4 }}>{s[1]}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* list */}
+        <div style={{ border: '2px solid var(--paper)' }}>
+          {wins.map((w, i) => (
+            <button data-win key={w.n} onClick={() => setZoom(w)} className="win-row" style={{
+              width: '100%', display: 'flex', alignItems: 'center', gap: 'clamp(12px,2vw,28px)', textAlign: 'left',
+              padding: 'clamp(14px,2vw,24px) clamp(14px,2.4vw,30px)', cursor: 'none',
+              borderBottom: i < wins.length - 1 ? '2px solid var(--paper)' : 'none', background: 'transparent', transition: 'background 0.18s',
+            }}>
+              <span data-fg className="display" style={{ fontSize: 'clamp(28px,4vw,60px)', color: 'var(--accent)', lineHeight: 0.9, flexShrink: 0, width: '1.6em' }}>{w.n}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div data-fg className="display" style={{ fontSize: 'clamp(20px,3vw,40px)', color: 'var(--paper)', lineHeight: 0.95 }}>{w.title}</div>
+                <div data-fg className="small" style={{ color: 'var(--grey-2)', marginTop: 4 }}>{w.role} — {w.org}</div>
+              </div>
+              <span data-fg className="tag" style={{ color: 'var(--paper)', borderColor: 'var(--paper)', flexShrink: 0 }}>{w.tag}</span>
+              <span data-fg className="meta" style={{ color: 'var(--grey-2)', flexShrink: 0 }}>{w.year}</span>
+              <div className="photo" style={{ width: 64, height: 64, flexShrink: 0, border: '2px solid var(--paper)' }}><img src={w.img} alt="" loading="lazy" decoding="async" /></div>
+            </button>
+          ))}
+        </div>
       </div>
+
+      {zoom && (
+        <div role="dialog" aria-modal="true" aria-label={zoom.title} onClick={() => setZoom(null)} style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(23,22,15,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(20px,5vw,64px)', cursor: 'none' }}>
+          <button onClick={() => setZoom(null)} className="btn btn-accent" style={{ position: 'absolute', top: 20, left: 20 }}>← Back</button>
+          <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: 760 }}>
+            <img src={zoom.img} alt={zoom.title} style={{ width: '100%', border: '3px solid var(--paper)', display: 'block' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, gap: 12 }}>
+              <span className="meta" style={{ color: 'var(--ink)' }}>{zoom.title} — {zoom.org}</span>
+              <span className="meta" style={{ color: 'var(--accent)' }}>{zoom.year}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

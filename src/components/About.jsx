@@ -1,124 +1,76 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { usePrefersReducedMotion } from '../lib/motion'
 
-gsap.registerPlugin(ScrollTrigger)
-
-const education = [
-  {
-    degree: 'Bachelor of Computer Applications (BCA)',
-    school: 'Maharaja Surajmal Institute (MSI)', location: 'New Delhi',
-    period: 'Aug 2025 – Expected Aug 2028', gpa: '9.1',
-    highlights: ['Social Media Head, BCA Placement Cell — 2026', 'Member, Geek Room MSIT — 2025', 'Member, National Service Scheme (NSS) — 2025'],
-  },
-  {
-    degree: 'High School Diploma — CBSE Class XII',
-    school: 'Bloom Public School', location: 'New Delhi',
-    period: '2025', gpa: null, highlights: [],
-  },
+const facts = [
+  ['Based', 'New Delhi, India'],
+  ['Experience', '4 Years · Live Brand'],
+  ['Now', 'Designer & Marketer @ Murliwale'],
+  ['Strengths', 'Brand · Paid Ads · E-Com'],
 ]
 
 export default function About() {
-  const sectionRef = useRef(null)
-  const photoRef = useRef(null)
-  const introRef = useRef(null)
-  const eduRef = useRef(null)
-
+  const ref = useRef(null)
+  const reduced = usePrefersReducedMotion()
   useEffect(() => {
+    if (reduced) return
     const ctx = gsap.context(() => {
-      gsap.fromTo(photoRef.current, { opacity: 0, x: -40 },
-        { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 78%' } })
-      gsap.fromTo(introRef.current, { opacity: 0, x: 40 },
-        { opacity: 1, x: 0, duration: 0.9, delay: 0.12, ease: 'power3.out', scrollTrigger: { trigger: sectionRef.current, start: 'top 78%' } })
-      gsap.fromTo(eduRef.current, { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: eduRef.current, start: 'top 85%' } })
-    }, sectionRef)
+      gsap.from('[data-a]', { opacity: 0, y: 30, duration: 0.7, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: ref.current, start: 'top 72%' } })
+    }, ref)
     return () => ctx.revert()
-  }, [])
+  }, [reduced])
 
   return (
-    <section id="about" ref={sectionRef} className="section">
+    <section id="about" ref={ref} className="section">
       <div className="wrap">
-        <div className="section-head" style={{ textAlign: 'center' }}>
-          <span className="eyebrow" style={{ marginBottom: '14px' }}>01 · Who I Am</span>
-          <h2 className="display" style={{ fontSize: 'clamp(34px, 6vw, 64px)', marginTop: '12px' }}>
-            The designer who <span className="grad-warm">thinks in metrics</span>
-          </h2>
+        {/* header */}
+        <div data-a style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12, marginBottom: '8px', flexWrap: 'wrap' }}>
+          <span className="meta">01 / About</span>
+          <span className="meta">Fig. 01 — The Person</span>
         </div>
+        <h2 data-a className="display dot h-lg" style={{ color: 'var(--ink)', marginBottom: '20px' }}>ABOUT ME</h2>
+        <div className="rule-thick" style={{ marginBottom: 'clamp(24px,3vw,40px)' }} />
 
-        {/* intro */}
-        <div className="row g-3 g-lg-4 align-items-stretch">
-          <div className="col-12 col-lg-5" ref={photoRef} style={{ opacity: 0 }}>
-            <div className="neu" style={{ padding: '14px', height: '100%' }}>
-              <div style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', height: '100%', minHeight: '300px' }}>
-                <img src="/assets/pfp.png" alt="Arnav Sharma" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(26,19,14,0.7), transparent 50%)' }} />
-                <div style={{ position: 'absolute', bottom: '14px', left: '14px' }}>
-                  <span className="tag float-anim" style={{ background: 'rgba(26,19,14,0.7)', backdropFilter: 'blur(8px)' }}>BCA · 9.1 GPA · 2+ yrs experience</span>
-                </div>
-              </div>
+        <div className="row g-0" style={{ border: '2px solid var(--ink)' }}>
+          {/* photo */}
+          <div data-a className="col-12 col-lg-4 split-divider">
+            <div className="photo" style={{ border: 'none', height: '100%', minHeight: 320 }}>
+              <img src="/assets/pfp.png" alt="Arnav Sharma" data-zoom loading="lazy" decoding="async" />
+              <span className="label-box" style={{ position: 'absolute', bottom: 12, left: 12 }}>@arnav · Designer</span>
             </div>
           </div>
 
-          <div className="col-12 col-lg-7" ref={introRef} style={{ opacity: 0 }}>
-            <div className="card-cream" style={{ padding: 'clamp(26px, 4vw, 44px)', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#C24C15' }}>About Arnav</span>
-              <p className="display" style={{ fontSize: 'clamp(22px, 3vw, 34px)', lineHeight: 1.15, color: '#1A130E', margin: '14px 0 18px' }}>
-                I don't just make things look good — I make them <span className="grad-warm-2">work</span>.
+          {/* statement */}
+          <div className="col-12 col-lg-8" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div data-a style={{ padding: 'clamp(20px,3vw,40px)', borderBottom: '2px solid var(--ink)' }}>
+              <p className="display" style={{ fontSize: 'clamp(22px,3.2vw,46px)', lineHeight: 1.04, color: 'var(--ink)' }}>
+                I don't just make things <span style={{ color: 'var(--accent)' }}>look good</span> — I make them <span style={{ background: 'var(--accent)', color: 'var(--on-accent)', padding: '0 6px' }}>sell</span>.
               </p>
-              <p style={{ fontSize: '14px', lineHeight: 1.75, color: '#5A4634', marginBottom: '12px' }}>
-                A visual designer and performance marketer from Delhi. Every creative decision ties
-                back to a business outcome — more clicks, better conversions, stronger brand recall.
+            </div>
+            <div data-a style={{ padding: 'clamp(20px,3vw,40px)' }}>
+              <p className="body" style={{ marginBottom: '16px', maxWidth: '62ch' }}>
+                A visual designer and performance marketer who treats design as a growth lever, not decoration.
+                Across four years on a live consumer brand I've owned the full loop — ₹98K in ad spend at
+                3.8× ROAS over 1,200+ SKUs on Amazon, Flipkart &amp; WooCommerce — turning creative directly
+                into revenue.
               </p>
-              <p style={{ fontSize: '14px', lineHeight: 1.75, color: '#5A4634', marginBottom: '24px' }}>
-                At 17 I was already running real campaigns — ₹98K in ad spend at 3.8x ROAS,
-                1,200+ SKUs across Amazon &amp; Flipkart — while studying BCA and heading social
-                media for our placement cell.
+              <p className="small" style={{ maxWidth: '62ch' }}>
+                I learn fast and ship faster. Every decision ties back to a number — clicks, conversions,
+                recall — and I'd rather make sharp, measurable work than safe, pretty work. Hand me a brief
+                and I'll own it end-to-end, from first concept to the metric it moves.
               </p>
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <a href="mailto:2008arnavsharma@gmail.com" className="btn-neu" style={{ fontSize: '12px', padding: '11px 24px' }}>Email Me →</a>
-                <a href="tel:+919289811877" className="btn-neu btn-cream" style={{ fontSize: '12px', padding: '11px 24px' }}>+91 92898 11877</a>
-              </div>
             </div>
           </div>
         </div>
 
-        {/* education */}
-        <div ref={eduRef} style={{ opacity: 0, marginTop: 'clamp(36px, 5vw, 56px)' }}>
-          <div className="section-head" style={{ marginBottom: '24px' }}>
-            <span className="eyebrow">02 · Education</span>
-            <h3 className="display" style={{ fontSize: 'clamp(26px, 4vw, 40px)', marginTop: '10px' }}>Academic <span className="grad-warm-2">background</span></h3>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {education.map((edu, i) => (
-              <div key={i} className="neu neu-hover" style={{ padding: 'clamp(22px, 3vw, 30px)' }}>
-                <div className="row g-3 align-items-center">
-                  <div className="col-12 col-md-7">
-                    <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--muted)' }}>{edu.period}</span>
-                    <h4 className="display-2" style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(18px, 2.4vw, 24px)', color: 'var(--text)', margin: '8px 0 4px' }}>{edu.degree}</h4>
-                    <p style={{ fontSize: '13px', color: 'var(--text-soft)' }}>{edu.school} · {edu.location}</p>
-                  </div>
-                  <div className="col-12 col-md-5">
-                    {edu.gpa && (
-                      <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: '8px', marginBottom: edu.highlights.length ? '14px' : 0 }}>
-                        <span className="display grad-warm" style={{ fontSize: '32px' }}>{edu.gpa}</span>
-                        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--muted)' }}>GPA / 10</span>
-                      </div>
-                    )}
-                    {edu.highlights.length > 0 && (
-                      <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '7px' }}>
-                        {edu.highlights.map(h => (
-                          <li key={h} style={{ fontSize: '12.5px', color: 'var(--text-soft)', display: 'flex', gap: '10px', alignItems: 'baseline' }}>
-                            <span style={{ width: 12, height: 2, borderRadius: '2px', background: 'var(--orange)', flexShrink: 0, display: 'inline-block', transform: 'translateY(-3px)' }} />{h}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* facts strip */}
+        <div data-a className="row g-0" style={{ borderLeft: '2px solid var(--ink)', borderRight: '2px solid var(--ink)', borderBottom: '2px solid var(--ink)' }}>
+          {facts.map((f) => (
+            <div key={f[0]} className="col-6 col-lg-3 q4" style={{ padding: 'clamp(14px,1.6vw,20px)' }}>
+              <span className="meta" style={{ display: 'block', marginBottom: '6px' }}>{f[0]}</span>
+              <span style={{ fontFamily: 'var(--mono)', fontWeight: 700, fontSize: '13px', color: 'var(--ink)', lineHeight: 1.3, display: 'block' }}>{f[1]}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -1,107 +1,106 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import HeroVisual from './HeroVisual'
+import { prefersReducedMotion } from '../lib/motion'
 
-const stats = [
-  { value: 12, prefix: '₹', suffix: 'L+', label: 'Revenue Driven' },
-  { value: 3.8, prefix: '', suffix: 'x', label: 'ROAS' },
-  { value: 2300, prefix: '', suffix: '+', label: 'Orders' },
-  { value: 1200, prefix: '', suffix: '+', label: 'SKUs' },
+const numbers = [
+  { v: '₹12L+', l: 'Revenue Driven' },
+  { v: '3.8×', l: 'Return on Ad Spend' },
+  { v: '2,300+', l: 'Amazon Orders' },
+  { v: '1,200+', l: 'SKUs Branded' },
 ]
 
-function Stat({ stat, delay }) {
-  const ref = useRef(null)
-  useEffect(() => {
-    const o = { v: 0 }
-    gsap.to(o, {
-      v: stat.value, delay, duration: 1.8, ease: 'power2.out',
-      onUpdate: () => {
-        if (!ref.current) return
-        ref.current.textContent = stat.prefix +
-          (stat.value % 1 === 0 ? Math.round(o.v).toLocaleString() : o.v.toFixed(1)) + stat.suffix
-      },
-    })
-  }, [stat, delay])
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <div ref={ref} className="display" style={{ fontSize: 'clamp(24px, 3.2vw, 38px)', color: 'var(--gold)' }}>{stat.prefix}0{stat.suffix}</div>
-      <div style={{ fontFamily: "'Space Mono', monospace", fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: '6px' }}>{stat.label}</div>
-    </div>
-  )
-}
+const index = [
+  { n: '01', label: 'About', href: '#about' },
+  { n: '02', label: 'Work', href: '#work' },
+  { n: '03', label: 'Designs', href: '#designs' },
+  { n: '04', label: 'Skills', href: '#skills' },
+  { n: '05', label: 'Wins', href: '#achievements' },
+  { n: '06', label: 'Certifications', href: '#certifications' },
+  { n: '07', label: 'Contact', href: '#contact' },
+]
 
 export default function Hero() {
-  const eyebrowRef = useRef(null)
-  const l1 = useRef(null), l2 = useRef(null)
-  const metaRef = useRef(null)
-  const descRef = useRef(null)
-  const ctaRef = useRef(null)
-  const visualRef = useRef(null)
-  const statsRef = useRef(null)
-
+  const ref = useRef(null)
   useEffect(() => {
-    const d = 2.2
-    const tl = gsap.timeline({ delay: d })
-    tl.fromTo(eyebrowRef.current, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.6 })
-      .fromTo(l1.current, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power4.out' }, '-=0.3')
-      .fromTo(l2.current, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power4.out' }, '-=0.6')
-      .fromTo(metaRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.45')
-      .fromTo(descRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
-      .fromTo(ctaRef.current, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
-      .fromTo(visualRef.current, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 1, ease: 'power3.out' }, d * -1 + 0.3)
-      .fromTo(statsRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 }, '-=0.4')
+    if (prefersReducedMotion()) return
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 1.5 })
+      tl.from('[data-h="meta"]', { opacity: 0, y: -10, duration: 0.5 })
+        .from('[data-h="name"] span', { yPercent: 110, duration: 0.8, ease: 'power4.out', stagger: 0.08 }, '-=0.2')
+        .from('[data-h="role"]', { opacity: 0, y: 14, duration: 0.5 }, '-=0.4')
+        .from('[data-h="num"]', { opacity: 0, y: 20, duration: 0.5, stagger: 0.08 }, '-=0.2')
+        .from('[data-h="side"]', { opacity: 0, x: 16, duration: 0.5 }, '-=0.5')
+    }, ref)
+    return () => ctx.revert()
   }, [])
+  const go = (e, href) => { e.preventDefault(); document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' }) }
 
   return (
-    <section id="hero" style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center',
-      padding: 'clamp(110px, 13vw, 140px) clamp(20px, 5vw, 56px) clamp(40px, 5vw, 64px)',
-    }}>
+    <section id="hero" ref={ref} style={{ padding: 'clamp(78px,9vw,110px) clamp(16px,4vw,48px) clamp(36px,5vw,64px)', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
       <div className="wrap" style={{ width: '100%' }}>
-        <div className="row align-items-center g-4 gx-lg-5">
-          {/* LEFT — text */}
-          <div className="col-12 col-lg-6 order-2 order-lg-1">
-            <div ref={eyebrowRef} style={{ opacity: 0, marginBottom: '20px' }}>
-              <span className="eyebrow">Designer · Marketer · Delhi</span>
-            </div>
 
-            <h1 style={{ marginBottom: '20px' }}>
-              <span ref={l1} className="display" style={{ display: 'block', opacity: 0, fontSize: 'clamp(52px, 9vw, 108px)', color: 'var(--text)' }}>ARNAV</span>
-              <span ref={l2} className="display grad-warm" style={{ display: 'block', opacity: 0, fontSize: 'clamp(52px, 9vw, 108px)' }}>SHARMA</span>
-            </h1>
+        {/* meta row */}
+        <div data-h="meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: '18px' }}>
+          <span className="meta meta-ink">Portfolio — Edition 2026</span>
+          <span className="meta">Delhi, IN · Design × Growth</span>
+        </div>
+        <div className="rule-thick" />
 
-            <div ref={metaRef} style={{ opacity: 0, display: 'flex', flexWrap: 'wrap', gap: '8px 20px', marginBottom: '22px', fontFamily: "'Inter', sans-serif", fontSize: '13px', color: 'var(--text-soft)' }}>
-              <span><span style={{ color: 'var(--muted)' }}>Role / </span>Graphic Designer &amp; Performance Marketer</span>
-            </div>
+        {/* name */}
+        <div style={{ position: 'relative', padding: '14px 0 8px' }}>
+          <span className="label-box accent-box" style={{ position: 'absolute', top: '18px', left: 0 }}>.Portfolio Presentation</span>
+          <h1 data-h="name" className="display" style={{ fontSize: 'clamp(64px,16vw,210px)', lineHeight: 0.84, color: 'var(--ink)', paddingTop: '26px' }}>
+            <span style={{ display: 'block', overflow: 'hidden' }}><span style={{ display: 'block' }}>ARNAV</span></span>
+            <span style={{ display: 'block', overflow: 'hidden' }}><span style={{ display: 'block', WebkitTextStroke: '2px var(--ink)', color: 'transparent' }}>SHARMA</span></span>
+          </h1>
+        </div>
 
-            <p ref={descRef} style={{ opacity: 0, fontSize: 'clamp(14px, 1.6vw, 17px)', color: 'var(--text-soft)', lineHeight: 1.7, maxWidth: '460px', marginBottom: '30px' }}>
-              I turn creative work into measurable revenue — design that converts,
-              campaigns that scale. Backed by <span style={{ color: 'var(--cream)', fontWeight: 600 }}>₹12L+ in real sales</span>.
-            </p>
+        <div data-h="role" style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', borderTop: '2px solid var(--ink)', borderBottom: '2px solid var(--ink)', padding: '12px 0', marginBottom: 'clamp(20px,3vw,34px)' }}>
+          <span className="display" style={{ fontSize: 'clamp(18px,2.6vw,30px)', color: 'var(--ink)' }}>Graphic Designer</span>
+          <span style={{ width: 10, height: 10, background: 'var(--accent)' }} />
+          <span className="display" style={{ fontSize: 'clamp(18px,2.6vw,30px)', color: 'var(--ink)' }}>Performance Marketer</span>
+          <span className="meta" style={{ marginLeft: 'auto' }}>BCA @ MSI · 9.1 GPA</span>
+        </div>
 
-            <div ref={ctaRef} style={{ opacity: 0, display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              <a href="#work" className="btn-neu" onClick={(e) => { e.preventDefault(); document.querySelector('#work')?.scrollIntoView({ behavior: 'smooth' }) }}>▶ See My Work</a>
-              <a href="#contact" className="btn-ghost" onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }) }}>Contact Me</a>
+        {/* numbers + index */}
+        <div className="row g-0" style={{ border: '2px solid var(--ink)' }}>
+          {/* numbers 2x2 */}
+          <div className="col-12 col-lg-8 split-divider" style={{ display: 'flex' }}>
+            <div className="row g-0" style={{ flex: 1, alignContent: 'stretch' }}>
+              {numbers.map((m, i) => (
+                <div data-h="num" key={m.l} className="col-6" style={{ borderBottom: i < 2 ? '2px solid var(--ink)' : 'none', borderRight: i % 2 === 0 ? '2px solid var(--ink)' : 'none', padding: 'clamp(16px,2.4vw,30px)', background: i === 0 ? 'var(--accent)' : 'transparent', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <div className="display" style={{ fontSize: 'clamp(40px,6vw,86px)', color: i === 0 ? 'var(--on-accent)' : 'var(--ink)', lineHeight: 0.9 }}>{m.v}</div>
+                  <div className="meta" style={{ marginTop: '8px', color: i === 0 ? 'var(--on-accent)' : 'var(--ink)' }}>{m.l}</div>
+                </div>
+              ))}
             </div>
           </div>
-
-          {/* RIGHT — animated visual */}
-          <div className="col-12 col-lg-6 order-1 order-lg-2">
-            <div ref={visualRef} style={{ opacity: 0 }}>
-              <HeroVisual />
+          {/* index + cta */}
+          <div data-h="side" className="col-12 col-lg-4" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ padding: 'clamp(14px,1.8vw,20px)', borderBottom: '2px solid var(--ink)' }}>
+              <span className="meta">Contents</span>
+            </div>
+            <div style={{ flex: 1 }}>
+              {index.map(it => (
+                <a key={it.href} href={it.href} onClick={(e) => go(e, it.href)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px clamp(14px,1.8vw,20px)', textDecoration: 'none', color: 'var(--ink)', borderBottom: '1px solid var(--line)', transition: 'background 0.15s, padding 0.15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = 'var(--on-accent)'; e.currentTarget.style.paddingLeft = '26px' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--ink)'; e.currentTarget.style.paddingLeft = '' }}>
+                  <span className="meta" style={{ color: 'inherit' }}>{it.n}</span>
+                  <span style={{ fontFamily: 'var(--mono)', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'inherit' }}>{it.label}</span>
+                  <span style={{ marginLeft: 'auto', fontFamily: 'var(--mono)', fontSize: '12px', color: 'inherit' }}>↘</span>
+                </a>
+              ))}
+            </div>
+            <div style={{ display: 'flex' }}>
+              <a href="#contact" onClick={(e) => go(e, '#contact')} className="btn btn-accent" style={{ flex: 1, justifyContent: 'center', borderWidth: '2px 0 0 0' }}>Contact Now</a>
             </div>
           </div>
         </div>
 
-        {/* stats */}
-        <div ref={statsRef} className="neu" style={{ opacity: 0, marginTop: 'clamp(28px, 4vw, 44px)', padding: '22px clamp(18px, 4vw, 40px)' }}>
-          <div className="row g-3">
-            {stats.map((s, i) => (
-              <div key={s.label} className="col-6 col-md-3">
-                <Stat stat={s} delay={2.3 + i * 0.12} />
-              </div>
-            ))}
-          </div>
+        {/* barcode footer */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12, marginTop: '16px' }}>
+          <span className="meta">© 2026 · Murliwale · MSI Placement Cell · NSS</span>
+          <div className="barcode" />
         </div>
       </div>
     </section>
