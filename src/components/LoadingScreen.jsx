@@ -30,7 +30,7 @@ export default function LoadingScreen({ onComplete }) {
       {/* top meta row */}
       <div ref={metaRef} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <span className="meta meta-ink">Arnav Sharma©</span>
-        <span className="meta">Portfolio / Edition 2026</span>
+        <span className="meta">Delhi, India</span>
       </div>
 
       {/* center name */}

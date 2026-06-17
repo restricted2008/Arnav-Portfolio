@@ -199,6 +199,20 @@ img[data-zoom] { cursor: none; }
 .win-row:hover [data-fg] { color: var(--on-accent) !important; }
 .win-row:hover .tag { border-color: var(--on-accent) !important; }
 
+/* WINS list row layout — horizontal on desktop, stacks below md so the title
+   gets full width (no one-word-per-line) and the tag/year/thumb drop below */
+.win-row { display: flex; align-items: center; justify-content: space-between; gap: clamp(12px,2vw,28px); }
+.win-head { display: flex; align-items: center; gap: clamp(12px,2vw,24px); flex: 1; min-width: 0; }
+.win-num { font-size: clamp(28px,4vw,60px); line-height: .9; flex-shrink: 0; width: 1.6em; }
+.win-titles { min-width: 0; }
+.win-title { font-size: clamp(20px,3vw,40px); line-height: .95; }
+.win-aside { display: flex; align-items: center; gap: clamp(10px,1.6vw,20px); flex-shrink: 0; }
+.win-thumb { width: 64px; height: 64px; flex-shrink: 0; }
+@media (max-width: 767px) {
+  .win-row { flex-direction: column; align-items: stretch; gap: 14px; }
+  .win-aside { justify-content: flex-start; }
+}
+
 /* Quad grids (4 cells: 4-up desktop → 2-up mobile) — breakpoint-aware dividers, no doubling.
    .q4  = cells with no bottom border (adds the mobile row divider via border-top)
    .q4v = cells that already carry their own bottom border (vertical dividers only) */

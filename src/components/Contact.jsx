@@ -72,7 +72,7 @@ export default function Contact() {
           </div>
           <div style={{ textAlign: 'right' }}>
             <div className="barcode" style={{ marginLeft: 'auto' }} />
-            <span className="meta" style={{ display: 'block', marginTop: 8 }}>© {new Date().getFullYear()} · Edition 2026 · Built by hand</span>
+            <span className="meta" style={{ display: 'block', marginTop: 8 }}>© {new Date().getFullYear()} · Built by hand</span>
           </div>
         </div>
       </div>

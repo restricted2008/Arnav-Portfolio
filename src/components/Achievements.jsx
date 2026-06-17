@@ -59,9 +59,9 @@ export default function Achievements() {
               <h3 className="display" style={{ fontSize: 'clamp(30px,5vw,64px)', color: 'var(--on-accent)', lineHeight: 0.9, margin: '14px 0 6px' }}>{featured.title}</h3>
               <span className="meta" style={{ color: 'var(--on-accent)' }}>{featured.org} · {featured.role}</span>
               <p style={{ fontFamily: 'var(--body)', fontSize: 15, lineHeight: 1.6, color: 'var(--on-accent)', margin: '14px 0 18px', maxWidth: '54ch' }}>{featured.blurb}</p>
-              <div style={{ display: 'flex', gap: 0, border: '2px solid var(--ink)', flexWrap: 'wrap' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', border: '2px solid var(--ink)' }}>
                 {featured.stats.map((s, i) => (
-                  <div key={s[1]} style={{ flex: '1 1 90px', padding: '14px 16px', borderRight: i < featured.stats.length - 1 ? '2px solid var(--ink)' : 'none' }}>
+                  <div key={s[1]} style={{ padding: '14px 12px', borderRight: i < featured.stats.length - 1 ? '2px solid var(--ink)' : 'none' }}>
                     <div className="display" style={{ fontSize: 'clamp(24px,3vw,40px)', color: 'var(--on-accent)', lineHeight: 0.9 }}>{s[0]}</div>
                     <div className="meta" style={{ color: 'var(--on-accent)', marginTop: 4 }}>{s[1]}</div>
                   </div>
@@ -75,18 +75,22 @@ export default function Achievements() {
         <div style={{ border: '2px solid var(--paper)' }}>
           {wins.map((w, i) => (
             <button data-win key={w.n} onClick={() => setZoom(w)} className="win-row" style={{
-              width: '100%', display: 'flex', alignItems: 'center', gap: 'clamp(12px,2vw,28px)', textAlign: 'left',
-              padding: 'clamp(14px,2vw,24px) clamp(14px,2.4vw,30px)', cursor: 'none',
+              width: '100%', textAlign: 'left', cursor: 'none',
+              padding: 'clamp(14px,2vw,24px) clamp(14px,2.4vw,30px)',
               borderBottom: i < wins.length - 1 ? '2px solid var(--paper)' : 'none', background: 'transparent', transition: 'background 0.18s',
             }}>
-              <span data-fg className="display" style={{ fontSize: 'clamp(28px,4vw,60px)', color: 'var(--accent)', lineHeight: 0.9, flexShrink: 0, width: '1.6em' }}>{w.n}</span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div data-fg className="display" style={{ fontSize: 'clamp(20px,3vw,40px)', color: 'var(--paper)', lineHeight: 0.95 }}>{w.title}</div>
-                <div data-fg className="small" style={{ color: 'var(--grey-2)', marginTop: 4 }}>{w.role} — {w.org}</div>
+              <div className="win-head">
+                <span data-fg className="display win-num" style={{ color: 'var(--accent)' }}>{w.n}</span>
+                <div className="win-titles">
+                  <div data-fg className="display win-title" style={{ color: 'var(--paper)' }}>{w.title}</div>
+                  <div data-fg className="small" style={{ color: 'var(--grey-2)', marginTop: 4 }}>{w.role} — {w.org}</div>
+                </div>
               </div>
-              <span data-fg className="tag" style={{ color: 'var(--paper)', borderColor: 'var(--paper)', flexShrink: 0 }}>{w.tag}</span>
-              <span data-fg className="meta" style={{ color: 'var(--grey-2)', flexShrink: 0 }}>{w.year}</span>
-              <div className="photo" style={{ width: 64, height: 64, flexShrink: 0, border: '2px solid var(--paper)' }}><img src={w.img} alt="" loading="lazy" decoding="async" /></div>
+              <div className="win-aside">
+                <span data-fg className="tag" style={{ color: 'var(--paper)', borderColor: 'var(--paper)' }}>{w.tag}</span>
+                <span data-fg className="meta win-year" style={{ color: 'var(--grey-2)' }}>{w.year}</span>
+                <div className="photo win-thumb" style={{ border: '2px solid var(--paper)' }}><img src={w.img} alt="" loading="lazy" decoding="async" /></div>
+              </div>
             </button>
           ))}
         </div>

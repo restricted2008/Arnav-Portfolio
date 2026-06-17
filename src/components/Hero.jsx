@@ -41,15 +41,14 @@ export default function Hero() {
 
         {/* meta row */}
         <div data-h="meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: '18px' }}>
-          <span className="meta meta-ink">Portfolio — Edition 2026</span>
+          <span className="meta meta-ink">Selected Work</span>
           <span className="meta">Delhi, IN · Design × Growth</span>
         </div>
         <div className="rule-thick" />
 
         {/* name */}
         <div style={{ position: 'relative', padding: '14px 0 8px' }}>
-          <span className="label-box accent-box" style={{ position: 'absolute', top: '18px', left: 0 }}>.Portfolio Presentation</span>
-          <h1 data-h="name" className="display" style={{ fontSize: 'clamp(64px,16vw,210px)', lineHeight: 0.84, color: 'var(--ink)', paddingTop: '26px' }}>
+          <h1 data-h="name" className="display" style={{ fontSize: 'clamp(64px,16vw,210px)', lineHeight: 0.84, color: 'var(--ink)', paddingTop: '6px' }}>
             <span style={{ display: 'block', overflow: 'hidden' }}><span style={{ display: 'block' }}>ARNAV</span></span>
             <span style={{ display: 'block', overflow: 'hidden' }}><span style={{ display: 'block', WebkitTextStroke: '2px var(--ink)', color: 'transparent' }}>SHARMA</span></span>
           </h1>
@@ -59,7 +58,6 @@ export default function Hero() {
           <span className="display" style={{ fontSize: 'clamp(18px,2.6vw,30px)', color: 'var(--ink)' }}>Graphic Designer</span>
           <span style={{ width: 10, height: 10, background: 'var(--accent)' }} />
           <span className="display" style={{ fontSize: 'clamp(18px,2.6vw,30px)', color: 'var(--ink)' }}>Performance Marketer</span>
-          <span className="meta" style={{ marginLeft: 'auto' }}>BCA @ MSI · 9.1 GPA</span>
         </div>
 
         {/* numbers + index */}
